@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigasi Media Digital & Literasi Informasi</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#070b14',
+                            card: '#0f172a',
+                            border: '#1e293b',
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                            indigo: '#6366f1',
+                            pink: '#ec4899',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 25px rgba(6, 182, 212, 0.3)',
+                        'neon-purple': '0 0 25px rgba(139, 92, 246, 0.3)',
+                        'neon-amber': '0 0 25px rgba(245, 158, 11, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070b14;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Effects */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        /* Custom Drag & Hover animations */
+        .interactive-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070b14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+
+        /* Print formatting for Certificate */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-certificate-container, #printable-certificate-container * {
+                visibility: visible;
+            }
+            #printable-certificate-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 24px;
+                box-shadow: none !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                border: 4px solid #0284c7 !important;
+            }
+            .cert-print-text-dark {
+                color: #0f172a !important;
+            }
+            .cert-print-subtext {
+                color: #334155 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-900">
+
+    <!-- HEADER NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('beranda')">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+                        <i class="fa-solid fa-satellite-dish text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-extrabold bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent tracking-wide">
+                            EKOSISTEM MEDIA DIGITAL
+                        </h1>
+                        <p class="text-[11px] text-slate-400 font-medium">Literasi Informasi & Detektif Berita</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
+                    <button onclick="switchTab('beranda')" id="nav-beranda" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-cyan-400 bg-cyan-500/10 border border-cyan-500/30">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Beranda</span>
+                    </button>
+                    <button onclick="switchTab('modul1')" id="nav-modul1" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                        <i class="fa-solid fa-sitemap"></i>
+                        <span>1. Ekosistem Digital</span>
+                    </button>
+                    <button onclick="switchTab('modul2')" id="nav-modul2" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                        <i class="fa-solid fa-user-secret"></i>
+                        <span>2. Fakta, Opini & Hoaks</span>
+                    </button>
+                    <button onclick="switchTab('evaluasi')" id="nav-evaluasi" class="nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                        <i class="fa-solid fa-award"></i>
+                        <span>3. Evaluasi & Sertifikat</span>
+                    </button>
+                </nav>
+
+                <!-- Audio Controller & Global XP Badge -->
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 bg-slate-900 border border-cyan-500/30 px-3.5 py-1.5 rounded-full shadow-inner">
+                        <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
+                        <span class="text-xs font-bold text-slate-300">XP: <span id="header-score-display" class="text-cyan-400 font-mono">0</span>/100</span>
+                    </div>
+
+                    <!-- Sound Toggle Button -->
+                    <button id="sound-toggle" onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-cyan-400 hover:border-cyan-500 transition-all" title="Toggle Sound Effects">
+                        <i class="fa-solid fa-volume-high text-sm" id="sound-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Progress Bar Header -->
+        <div class="w-full bg-slate-950 h-1.5 overflow-hidden">
+            <div id="learning-progress-bar" class="bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 h-full w-[10%] transition-all duration-500"></div>
+        </div>
+
+        <!-- Mobile Bottom Nav Bar -->
+        <div class="md:hidden flex justify-around bg-slate-950 border-t border-slate-800/80 px-2 py-2">
+            <button onclick="switchTab('beranda')" class="text-[11px] py-1 px-2 rounded font-medium text-cyan-400 flex flex-col items-center">
+                <i class="fa-solid fa-house text-sm mb-0.5"></i> Beranda
+            </button>
+            <button onclick="switchTab('modul1')" class="text-[11px] py-1 px-2 rounded font-medium text-slate-400 flex flex-col items-center">
+                <i class="fa-solid fa-sitemap text-sm mb-0.5"></i> Ekosistem
+            </button>
+            <button onclick="switchTab('modul2')" class="text-[11px] py-1 px-2 rounded font-medium text-slate-400 flex flex-col items-center">
+                <i class="fa-solid fa-user-secret text-sm mb-0.5"></i> Fakta/Hoaks
+            </button>
+            <button onclick="switchTab('evaluasi')" class="text-[11px] py-1 px-2 rounded font-medium text-slate-400 flex flex-col items-center">
+                <i class="fa-solid fa-award text-sm mb-0.5"></i> Sertifikat
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ================= TAB 1: BERANDA ================= -->
+        <section id="tab-beranda" class="tab-content space-y-10">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 border border-indigo-500/20 p-8 sm:p-12 shadow-2xl">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                            <span>Media Pembelajaran Interaktif Siswa</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                            Navigasi <span class="bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Ekosistem Media Digital</span> & Detektif Informasi
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                            Pelajari bagaimana informasi berita dibuat oleh tim produksi, ditopang oleh teknologi multimedia, serta disebarkan oleh tim distribusi. Uji kemampuan bernalar kritismu dalam membedakan fakta, opini, dan hoaks!
+                        </p>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="switchTab('modul1')" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 flex items-center space-x-3">
+                                <span>Mulai Pembelajaran Sub-Modul 1</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="switchTab('evaluasi')" class="px-6 py-3.5 rounded-2xl bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-300 font-semibold text-sm sm:text-base transition-all">
+                                <i class="fa-solid fa-trophy text-amber-400 mr-2"></i> Kuis & Sertifikat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Interactive Feature Preview Card -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative w-full max-w-sm">
+                            <div class="glass-panel p-6 rounded-3xl border border-cyan-500/30 shadow-neon-cyan space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                    </div>
+                                    <span class="text-xs font-mono text-cyan-400"><i class="fa-solid fa-shield-halved mr-1"></i> SIMULASI DIGITAL</span>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold">
+                                            <i class="fa-solid fa-newspaper"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-200">Struktur Redaksi Media</p>
+                                            <p class="text-[11px] text-slate-400">Reporter, Editor, Web Dev, Sosmed</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+                                            <i class="fa-solid fa-magnifying-glass font-bold"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-200">Simulasi Detektif Feed</p>
+                                            <p class="text-[11px] text-slate-400">Analisis 5 Kasus Informasi Berita</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                                            <i class="fa-solid fa-certificate"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-200">Sertifikat Digital</p>
+                                            <p class="text-[11px] text-slate-400">Gelar Predikat Detektif Digital</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objectives Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-cyan-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">1. Ekosistem Media Digital</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Memahami kombinasi peran individu (reporter, editor, desainer), teknologi multimedia, serta lembaga pendukung yang menyajikan berita akurat & relevan.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-purple-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">2. Struktur Peran Tim</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Menguraikan tugas spesifik antara Tim Produksi (konten berita), Tim Teknologi & Multimedia (infrastruktur), serta Tim Distribusi (pemasaran sosial).
+                    </p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-cat"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">3. Detektif Fakta vs Hoaks</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Membedakan kenyataan objektif (fakta), pandangan pribadi (opini), serta berita palsu manipulatif (hoaks) lewat simulasi kasus media sosial.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: MODUL 1 - EKOSISTEM MEDIA DIGITAL ================= -->
+        <section id="tab-modul1" class="tab-content hidden space-y-10">
+            <!-- Header Section -->
+            <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold tracking-wider text-cyan-400 uppercase font-mono">SUB-MODUL 1</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Ekosistem Media Digital & Pembagian Peran</h2>
+                </div>
+                <div class="flex items-center space-x-3 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-gamepad text-cyan-400"></i>
+                    <span class="text-xs font-semibold text-slate-300">Skor Game 1: <span id="game1-score-text" class="text-cyan-400 font-bold font-mono">0</span>/30 XP</span>
+                </div>
+            </div>
+
+            <!-- Concept Definition Box -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                        <i class="fa-solid fa-globe text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Pengertian Ekosistem Media Digital</h3>
+                </div>
+                
+                <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800/80 leading-relaxed text-sm sm:text-base text-slate-300">
+                    <strong>Ekosistem Media Digital</strong> adalah <span class="text-cyan-400 font-semibold">kombinasi peran individu</span> (seperti reporter, editor, dan desainer), <span class="text-purple-400 font-semibold">teknologi multimedia</span>, <span class="text-indigo-400 font-semibold">audiens</span>, serta <span class="text-pink-400 font-semibold">lembaga pendukung</span> yang bekerja sama untuk memastikan informasi disampaikan dengan cara yang relevan, akurat, dan sesuai dengan kebutuhan era digital.
+                </div>
+
+                <!-- 3 Pillars Clickable Explorer -->
+                <div class="pt-2">
+                    <h4 class="text-sm font-bold text-slate-300 mb-4 flex items-center">
+                        <i class="fa-solid fa-hand-pointer text-cyan-400 mr-2"></i> Klik setiap tim di bawah untuk menjelajahi peran & anggotanya:
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Tim Produksi Card -->
+                        <div onclick="openTeamModal('produksi')" class="interactive-card cursor-pointer bg-slate-900/90 p-6 rounded-2xl border border-indigo-500/30 hover:border-indigo-400 hover:shadow-neon-cyan space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl font-bold">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                </div>
+                                <span class="text-[11px] font-mono px-2 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">5 PERAN UTAMA</span>
+                            </div>
+                            <div>
+                                <h5 class="font-extrabold text-white text-lg">1. Tim Produksi</h5>
+                                <p class="text-xs text-slate-400 mt-1">Pembuatan konten berita, riset lapangan, wawancara, dan penyuntingan naskah.</p>
+                            </div>
+                            <div class="text-xs text-indigo-400 font-bold flex items-center pt-2">
+                                <span>Lihat Anggota & Tugas</span>
+                                <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- Tim Teknologi Card -->
+                        <div onclick="openTeamModal('teknologi')" class="interactive-card cursor-pointer bg-slate-900/90 p-6 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 hover:shadow-neon-cyan space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <span class="text-[11px] font-mono px-2 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">5 PERAN UTAMA</span>
+                            </div>
+                            <div>
+                                <h5 class="font-extrabold text-white text-lg">2. Tim Teknologi & Multimedia</h5>
+                                <p class="text-xs text-slate-400 mt-1">Infrastruktur server, pengembangan situs berita, serta desain sistem grafis.</p>
+                            </div>
+                            <div class="text-xs text-cyan-400 font-bold flex items-center pt-2">
+                                <span>Lihat Anggota & Tugas</span>
+                                <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- Tim Distribusi Card -->
+                        <div onclick="openTeamModal('distribusi')" class="interactive-card cursor-pointer bg-slate-900/90 p-6 rounded-2xl border border-purple-500/30 hover:border-purple-400 hover:shadow-neon-purple space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </div>
+                                <span class="text-[11px] font-mono px-2 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">3 PERAN UTAMA</span>
+                            </div>
+                            <div>
+                                <h5 class="font-extrabold text-white text-lg">3. Tim Distribusi</h5>
+                                <p class="text-xs text-slate-400 mt-1">Penyebaran konten ke media sosial, pencapaian target audiens, dan analisis trafik.</p>
+                            </div>
+                            <div class="text-xs text-purple-400 font-bold flex items-center pt-2">
+                                <span>Lihat Anggota & Tugas</span>
+                                <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Pop-Up Details for Teams -->
+            <div id="team-modal-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-xl w-full border border-slate-700 space-y-5 relative animate-fade-in">
+                    <button onclick="closeTeamModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                    <div id="modal-team-content">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Mini Game 1: Role Matching Scenario -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-cyan-500/30 shadow-neon-cyan space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                            <span>AKTIVITAS INTERAKTIF 1</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Kuis Pencocokan Peran Tim Media Digital</h3>
+                    </div>
+                    <button onclick="resetGame1()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Reset Game</span>
+                    </button>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-300">
+                    <i class="fa-solid fa-circle-info text-cyan-400 mr-1"></i> <strong>Petunjuk:</strong> Klik salah satu kartu skenario/peran di bawah ini, lalu klik pada wadah kelompok tim yang tepat! (Total 9 Skenario).
+                </p>
+
+                <!-- Cards Pool Container -->
+                <div id="roles-pool" class="flex flex-wrap gap-3 p-4 bg-slate-950/70 rounded-2xl border border-slate-800 min-h-[110px] items-center">
+                    <!-- Dynamic JavaScript Cards inserted here -->
+                </div>
+
+                <!-- 3 Drop Zone Buckets -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                    <!-- Bucket 1: Produksi -->
+                    <div onclick="placeSelectedRole('produksi')" class="bucket-zone group cursor-pointer bg-slate-900/80 p-5 rounded-2xl border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 transition-all space-y-3 min-h-[240px]">
+                        <div class="flex items-center justify-between border-b border-indigo-500/20 pb-2">
+                            <span class="font-bold text-indigo-300 text-sm flex items-center">
+                                <i class="fa-solid fa-clapperboard mr-2 text-indigo-400"></i> TIM PRODUKSI
+                            </span>
+                            <span id="count-produksi" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-0.5 rounded-full font-mono">0/3</span>
+                        </div>
+                        <div id="bucket-produksi" class="space-y-2">
+                            <!-- Items placed here -->
+                        </div>
+                    </div>
+
+                    <!-- Bucket 2: Teknologi -->
+                    <div onclick="placeSelectedRole('teknologi')" class="bucket-zone group cursor-pointer bg-slate-900/80 p-5 rounded-2xl border-2 border-dashed border-cyan-500/40 hover:border-cyan-400 transition-all space-y-3 min-h-[240px]">
+                        <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2">
+                            <span class="font-bold text-cyan-300 text-sm flex items-center">
+                                <i class="fa-solid fa-laptop-code mr-2 text-cyan-400"></i> TIM TEKNOLOGI
+                            </span>
+                            <span id="count-teknologi" class="text-xs bg-cyan-500/20 text-cyan-300 px-2.5 py-0.5 rounded-full font-mono">0/3</span>
+                        </div>
+                        <div id="bucket-teknologi" class="space-y-2">
+                            <!-- Items placed here -->
+                        </div>
+                    </div>
+
+                    <!-- Bucket 3: Distribusi -->
+                    <div onclick="placeSelectedRole('distribusi')" class="bucket-zone group cursor-pointer bg-slate-900/80 p-5 rounded-2xl border-2 border-dashed border-purple-500/40 hover:border-purple-400 transition-all space-y-3 min-h-[240px]">
+                        <div class="flex items-center justify-between border-b border-purple-500/20 pb-2">
+                            <span class="font-bold text-purple-300 text-sm flex items-center">
+                                <i class="fa-solid fa-bullhorn mr-2 text-purple-400"></i> TIM DISTRIBUSI
+                            </span>
+                            <span id="count-distribusi" class="text-xs bg-purple-500/20 text-purple-300 px-2.5 py-0.5 rounded-full font-mono">0/3</span>
+                        </div>
+                        <div id="bucket-distribusi" class="space-y-2">
+                            <!-- Items placed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game 1 Feedback Result -->
+                <div id="game1-feedback" class="hidden p-5 rounded-2xl border bg-slate-900 space-y-3">
+                    <!-- Dynamic feedback JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: MODUL 2 - FAKTA, OPINI & HOAKS ================= -->
+        <section id="tab-modul2" class="tab-content hidden space-y-10">
+            <!-- Header Section -->
+            <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold tracking-wider text-purple-400 uppercase font-mono">SUB-MODUL 2</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Literasi Informasi: Fakta, Opini, & Hoaks</h2>
+                </div>
+                <div class="flex items-center space-x-3 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-shield-cat text-purple-400"></i>
+                    <span class="text-xs font-semibold text-slate-300">Skor Game 2: <span id="game2-score-text" class="text-purple-400 font-bold font-mono">0</span>/30 XP</span>
+                </div>
+            </div>
+
+            <!-- Concept Comparison Matrix -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- FAKTA Card -->
+                <div class="glass-panel p-6 rounded-3xl border border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 transition-all space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-extrabold">
+                            📌
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">OBJEKTIF</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">FAKTA</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Keadaan atau peristiwa yang merupakan <strong>kenyataan atau sesuatu yang benar-benar terjadi</strong>.
+                    </p>
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Ciri-Ciri Utama:</p>
+                        <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside">
+                            <li>Berdasarkan data & bukti valid</li>
+                            <li>Dapat dibuktikan kebenarannya</li>
+                            <li>Bersifat objektif (bebas perasaan pribadi)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- OPINI Card -->
+                <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 hover:shadow-lg hover:shadow-amber-500/10 transition-all space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl font-extrabold">
+                            💬
+                        </div>
+                        <span class="text-xs font-bold text-amber-400 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">SUBJEKTIF</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">OPINI</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Pendapat, pikiran, pendirian, atau <strong>pandangan pribadi seseorang</strong> terhadap suatu isu.
+                    </p>
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <p class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">Ciri-Ciri Utama:</p>
+                        <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside">
+                            <li>Berdasarkan pendapat/perasaan pribadi</li>
+                            <li>Tidak dapat dibuktikan mutlak kebenarannya</li>
+                            <li>Bersifat subjektif & tergantung sudut pandang</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- HOAKS Card -->
+                <div class="glass-panel p-6 rounded-3xl border border-rose-500/30 hover:shadow-lg hover:shadow-rose-500/10 transition-all space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl font-extrabold">
+                            🚨
+                        </div>
+                        <span class="text-xs font-bold text-rose-400 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">MANIPULATIF</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">HOAKS</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Berita palsu yang <strong>sengaja dibuat untuk menyesatkan</strong> dan mempengaruhi pandangan publik.
+                    </p>
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <p class="text-[11px] font-bold text-rose-400 uppercase tracking-wider">Ciri-Ciri Utama:</p>
+                        <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside">
+                            <li>Judul bombastis & provokatif</li>
+                            <li>Menyebar cepat & memaksa disebar</li>
+                            <li>Gambar rekayasa / tidak logis</li>
+                            <li>Tidak ada sumber kredibel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Game 2: Social Media Feed Detective Simulator -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 shadow-neon-purple space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold mb-1">
+                            <i class="fa-solid fa-user-secret"></i>
+                            <span>AKTIVITAS INTERAKTIF 2</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Simulasi Detektif Informasi Feed Media Sosial</h3>
+                    </div>
+                    <div class="text-xs font-semibold text-slate-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+                        Kasus ke: <span id="feed-progress-text" class="text-purple-400 font-bold font-mono">1</span> dari 5
+                    </div>
+                </div>
+
+                <!-- Feed Post Card Component -->
+                <div class="max-w-2xl mx-auto bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-5 shadow-2xl">
+                    <!-- Post Header -->
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-3">
+                        <div class="flex items-center space-x-3">
+                            <div id="feed-avatar" class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-white text-sm shadow">
+                                NET
+                            </div>
+                            <div>
+                                <h4 id="feed-author" class="font-bold text-sm text-slate-200">@BeritaNet_ID</h4>
+                                <p id="feed-time" class="text-[11px] text-slate-400">2 jam yang lalu • Unggahan Publik</p>
+                            </div>
+                        </div>
+                        <span id="feed-badge" class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 text-[11px] font-mono">
+                            #Kasus1
+                        </span>
+                    </div>
+
+                    <!-- Post Content Body -->
+                    <div id="feed-content-box" class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+                        <!-- Post content inserted by JS -->
+                    </div>
+
+                    <!-- User Action Option Buttons -->
+                    <div class="space-y-3 pt-2">
+                        <p class="text-xs font-semibold text-slate-400 text-center">Tentukan Kategori Informasi dari Unggahan di Atas:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="checkFeedAnswer('Fakta')" class="feed-opt-btn py-3 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 text-emerald-300 font-bold text-sm transition-all flex items-center justify-center space-x-2">
+                                <span>📌 FAKTA</span>
+                            </button>
+                            <button onclick="checkFeedAnswer('Opini')" class="feed-opt-btn py-3 px-4 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-300 font-bold text-sm transition-all flex items-center justify-center space-x-2">
+                                <span>💬 OPINI</span>
+                            </button>
+                            <button onclick="checkFeedAnswer('Hoaks')" class="feed-opt-btn py-3 px-4 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-rose-300 font-bold text-sm transition-all flex items-center justify-center space-x-2">
+                                <span>🚨 HOAKS</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer Feedback Banner -->
+                    <div id="feed-explanation-box" class="hidden p-4 rounded-xl border space-y-2">
+                        <!-- JS Dynamic Feedback -->
+                    </div>
+
+                    <!-- Next Post Navigation Button -->
+                    <div class="flex justify-end pt-2">
+                        <button id="next-feed-btn" onclick="nextFeedPost()" class="hidden px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs sm:text-sm transition-all flex items-center space-x-2">
+                            <span>Kasus Selanjutnya</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: EVALUASI & SERTIFIKAT ================= -->
+        <section id="tab-evaluasi" class="tab-content hidden space-y-10">
+            <!-- Header Section -->
+            <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold tracking-wider text-amber-400 uppercase font-mono">EVALUASI AKHIR</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Kuis Kelulusan & Sertifikat Literasi Digital</h2>
+                </div>
+                <div class="flex items-center space-x-3 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-trophy text-amber-400"></i>
+                    <span class="text-xs font-semibold text-slate-300">Skor Kuis: <span id="quiz-score-text" class="text-amber-400 font-bold font-mono">0</span>/40 XP</span>
+                </div>
+            </div>
+
+            <!-- Quiz Interactive Container -->
+            <div id="quiz-container" class="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <h3 class="text-xl font-bold text-white flex items-center">
+                        <i class="fa-solid fa-clipboard-question text-amber-400 mr-2"></i> Evaluasi Pemahaman (5 Soal Pilihan Ganda)
+                    </h3>
+                    <span id="quiz-progress-text" class="text-xs font-mono text-slate-400">Soal 1 dari 5</span>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div id="quiz-question-box" class="text-base sm:text-lg font-bold text-slate-100">
+                        <!-- Question JS -->
+                    </div>
+
+                    <div id="quiz-options-container" class="space-y-3">
+                        <!-- Options JS -->
+                    </div>
+
+                    <div id="quiz-feedback-box" class="hidden p-4 rounded-xl border text-sm">
+                        <!-- Feedback JS -->
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button id="next-quiz-btn" onclick="nextQuizQuestion()" class="hidden px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all flex items-center space-x-2">
+                            <span>Lanjut Soal</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Summary Dashboard -->
+            <div id="score-summary-dashboard" class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <i class="fa-solid fa-chart-pie text-cyan-400 mr-2"></i> Ringkasan Akumulasi Skor Pembelajaran
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-indigo-500/30">
+                        <p class="text-xs text-slate-400 mb-1">Sub-Modul 1 (Pencocokan Peran)</p>
+                        <p class="text-2xl font-extrabold text-indigo-400 font-mono"><span id="summary-g1">0</span> / 30 XP</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-purple-500/30">
+                        <p class="text-xs text-slate-400 mb-1">Sub-Modul 2 (Detektif Information)</p>
+                        <p class="text-2xl font-extrabold text-purple-400 font-mono"><span id="summary-g2">0</span> / 30 XP</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-2xl border border-amber-500/30">
+                        <p class="text-xs text-slate-400 mb-1">Evaluasi Kuis</p>
+                        <p class="text-2xl font-extrabold text-amber-400 font-mono"><span id="summary-quiz">0</span> / 40 XP</p>
+                    </div>
+                    <div class="bg-slate-900/90 p-4 rounded-2xl border border-cyan-500/50 shadow-neon-cyan">
+                        <p class="text-xs text-cyan-300 font-bold mb-1">TOTAL AKHIR XP</p>
+                        <p class="text-3xl font-black text-cyan-400 font-mono"><span id="summary-total">0</span> / 100 XP</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Generator Form & Printable Certificate Card -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-cyan-500/30 space-y-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Buat Sertifikat Literasi Digital</h3>
+                        <p class="text-xs text-slate-400">Masukkan nama lengkapmu untuk menerbitkan sertifikat pencapaian resmi!</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 max-w-xl">
+                    <input type="text" id="user-name-input" placeholder="Ketik Nama Lengkap Siswa..." class="flex-grow px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400">
+                    <button onclick="generateCertificate()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Terbitkan Sertifikat</span>
+                    </button>
+                </div>
+
+                <!-- Printable Certificate Container -->
+                <div id="printable-certificate-container" class="mt-8 bg-slate-950 p-8 sm:p-12 rounded-3xl border-4 border-double border-cyan-500/40 relative overflow-hidden shadow-2xl">
+                    <!-- Background Glow Overlay -->
+                    <div class="absolute -right-20 -bottom-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-20 -top-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="relative z-10 text-center space-y-6">
+                        <!-- Top Certificate Header -->
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                            <span class="text-xs font-mono text-cyan-400 cert-print-subtext"><i class="fa-solid fa-shield-halved mr-1"></i> RESMI - SERTIFIKAT KELULUSAN LITERASI DIGITAL</span>
+                            <span id="cert-id" class="text-xs font-mono text-slate-500 cert-print-subtext">ID: EMD-2026-9901</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h2 class="text-2xl sm:text-4xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 uppercase cert-print-text-dark">
+                                SERTIFIKAT APRESIASI
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-400 cert-print-subtext">Sertifikat ini diberikan secara sah kepada:</p>
+                        </div>
+
+                        <div class="py-2 border-b-2 border-cyan-500/50 inline-block px-8">
+                            <h3 id="cert-name-display" class="text-2xl sm:text-4xl font-extrabold text-white tracking-wide cert-print-text-dark">
+                                [ Nama Siswa ]
+                            </h3>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed cert-print-subtext">
+                            Telah menyelesaikan seluruh modul media pembelajaran interaktif <br class="hidden sm:block">
+                            <strong class="text-cyan-400">"Ekosistem Media Digital & Detektif Informasi"</strong> mengenai Struktur Redaksi (Produksi, Teknologi, Distribusi) serta Kemampuan Membedakan Fakta, Opini, dan Hoaks.
+                        </p>
+
+                        <!-- Predicate & Score Card -->
+                        <div class="flex flex-col sm:flex-row items-center justify-around gap-4 pt-4 bg-slate-900/70 p-4 rounded-2xl border border-slate-800">
+                            <div>
+                                <p class="text-[11px] text-slate-400 uppercase tracking-wider cert-print-subtext">PREDIKAT KELULUSAN</p>
+                                <p id="cert-predicate" class="text-base font-bold text-cyan-400 cert-print-text-dark">Detektif Digital Master</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-400 uppercase tracking-wider cert-print-subtext">TOTAL SKOR AKHIR</p>
+                                <p id="cert-score" class="text-base font-bold text-amber-400 font-mono cert-print-text-dark">0 / 100 XP</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-400 uppercase tracking-wider cert-print-subtext">TANGGAL TERBIT</p>
+                                <p id="cert-date" class="text-base font-bold text-slate-200 cert-print-text-dark">-- November 2026</p>
+                            </div>
+                        </div>
+
+                        <!-- Certificate Footer Signatures -->
+                        <div class="flex justify-between items-end pt-6 text-left border-t border-slate-800">
+                            <div class="space-y-1">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-check-double"></i>
+                                </div>
+                                <p class="text-[11px] text-slate-400 cert-print-subtext">Sistem Verifikasi Otomatis</p>
+                            </div>
+                            <div class="text-right space-y-1">
+                                <p class="text-xs font-bold text-slate-300 cert-print-text-dark">Pengembang Pembelajaran Digital</p>
+                                <p class="text-[10px] text-slate-500 cert-print-subtext">Modul Ekosistem Media Digital</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Action Button -->
+                <div class="flex justify-end pt-4">
+                    <button onclick="window.print()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak / Simpan Sertifikat (PDF)</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-6 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-xs text-slate-400 font-medium">
+                © 2026 Media Pembelajaran Interaktif — Ekosistem Media Digital & Literasi Informasi Sekolah Menengah.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ================= AUDIO SYNTHESIZER (WEB AUDIO API) ================= */
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (isMuted) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(850, now + 0.04);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.04);
+                    osc.start(now);
+                    osc.stop(now + 0.04);
+                } else if (type === 'correct') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                    osc.start(now);
+                    osc.stop(now + 0.22);
+                } else if (type === 'wrong') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(170, now + 0.1);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                    osc.start(now);
+                    osc.stop(now + 0.22);
+                } else if (type === 'complete') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        g.gain.setValueAtTime(0.15, now + idx * 0.09);
+                        g.gain.linearRampToValueAtTime(0.01, now + idx * 0.09 + 0.18);
+                        o.start(now + idx * 0.09);
+                        o.stop(now + idx * 0.09 + 0.18);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('sound-icon');
+            if (isMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-cyan-400';
+                playSound('click');
+            }
+        }
+
+        /* ================= TAB NAVIGATION ================= */
+        function switchTab(tabId) {
+            playSound('click');
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50';
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = 'nav-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 text-cyan-400 bg-cyan-500/10 border border-cyan-500/30';
+            }
+
+            const progressBar = document.getElementById('learning-progress-bar');
+            if (tabId === 'beranda') progressBar.style.width = '10%';
+            else if (tabId === 'modul1') progressBar.style.width = '40%';
+            else if (tabId === 'modul2') progressBar.style.width = '70%';
+            else if (tabId === 'evaluasi') progressBar.style.width = '100%';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ================= MODAL EXPLORER TEAM DETAILS ================= */
+        const teamDetails = {
+            produksi: {
+                title: 'Tim Produksi (Konten & Kreatif)',
+                badge: 'Fokus: Pembuatan Isi Informasi',
+                icon: 'fa-pen-nib text-indigo-400',
+                color: 'border-indigo-500/40 text-indigo-300',
+                members: [
+                    { title: 'Pembuat Ide / Producer', desc: 'Menentukan topik utama berita dan arah sudut pandang riset.' },
+                    { title: 'Penulis Naskah (Scriptwriter)', desc: 'Menyusun alur teks berita yang sistematis, lugas, dan menarik.' },
+                    { title: 'Reporter', desc: 'Melakukan liputan langsung di lapangan, wawancara narasumber, dan verifikasi awal.' },
+                    { title: 'Editor Naskah & Video', desc: 'Menyunting tata bahasa berita dan memotong klip video berita.' },
+                    { title: 'Desainer Visual', desc: 'Merancang aset visualPendukung seperti grafik berita dan foto.' }
+                ]
+            },
+            teknologi: {
+                title: 'Tim Teknologi & Multimedia (Sistem)',
+                badge: 'Fokus: Perangkat & Infrastruktur',
+                icon: 'fa-laptop-code text-cyan-400',
+                color: 'border-cyan-500/40 text-cyan-300',
+                members: [
+                    { title: 'Pengembang Sistem (Systems Engineer)', desc: 'Memastikan arsitektur backend portal berita aman dari peretasan.' },
+                    { title: 'Pengelola Platform (CMS Admin)', desc: 'Mengatur alur penerbitan artikel pada sistem manajemen konten.' },
+                    { title: 'Teknisi Infrastruktur Digital', desc: 'Menjaga performa server agar cepat diakses oleh ribuan pembaca.' },
+                    { title: 'Desainer Grafis / UI Designer', desc: 'Membuat tata letak (layout) aplikasi berita yang nyaman dibaca.' },
+                    { title: 'Web Developer', desc: 'Menulis kode program HTML, CSS, & JavaScript portal media.' }
+                ]
+            },
+            distribusi: {
+                title: 'Tim Distribusi (Pemasaran & Jangkauan)',
+                badge: 'Fokus: Publikasi & Audiens',
+                icon: 'fa-share-nodes text-purple-400',
+                color: 'border-purple-500/40 text-purple-300',
+                members: [
+                    { title: 'Pengelola Media Sosial', desc: 'Mengemas berita menjadi unggahan menarik di Instagram, TikTok, & X.' },
+                    { title: 'Perancang Strategi Audiens (SEO)', desc: 'Mengoptimalkan kata kunci berita agar muncul di halaman utama mesin pencari.' },
+                    { title: 'Analis Data Performa', desc: 'Membaca statistik grafik pembaca dan memberikan evaluasi jangkauan.' }
+                ]
+            }
+        };
+
+        function openTeamModal(teamKey) {
+            playSound('click');
+            const data = teamDetails[teamKey];
+            const content = document.getElementById('modal-team-content');
+
+            let membersHTML = '';
+            data.members.forEach(m => {
+                membersHTML += `
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+                        <p class="text-xs font-bold text-slate-200"><i class="fa-solid fa-user-check text-cyan-400 mr-1.5"></i> ${m.title}</p>
+                        <p class="text-[11px] text-slate-400">${m.desc}</p>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = `
+                <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                    <i class="fa-solid ${data.icon} text-2xl"></i>
+                    <div>
+                        <h4 class="text-lg font-bold text-white">${data.title}</h4>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 ${data.color}">${data.badge}</span>
+                    </div>
+                </div>
+                <div class="space-y-2 pt-2 max-h-[320px] overflow-y-auto pr-1">
+                    ${membersHTML}
+                </div>
+            `;
+
+            document.getElementById('team-modal-overlay').classList.remove('hidden');
+        }
+
+        function closeTeamModal() {
+            playSound('click');
+            document.getElementById('team-modal-overlay').classList.add('hidden');
+        }
+
+        /* ================= GAME 1: ROLE MATCHING ================= */
+        const rolesData = [
+            { id: 'r1', title: 'Reporter lapangan & wawancara', team: 'produksi', icon: 'fa-microphone' },
+            { id: 'r2', title: 'Web Developer pembuat portal berita', team: 'teknologi', icon: 'fa-code' },
+            { id: 'r3', title: 'Social Media Specialist berita', team: 'distribusi', icon: 'fa-hashtag' },
+            { id: 'r4', title: 'Editor Bahasa naskah berita', team: 'produksi', icon: 'fa-file-pen' },
+            { id: 'r5', title: 'Teknisi server & jaringan portal', team: 'teknologi', icon: 'fa-server' },
+            { id: 'r6', title: 'Analis Data performa pembaca', team: 'distribusi', icon: 'fa-chart-pie' },
+            { id: 'r7', title: 'Desainer Visual infografis berita', team: 'produksi', icon: 'fa-palette' },
+            { id: 'r8', title: 'Pengembang Sistem keamanan web', team: 'teknologi', icon: 'fa-shield-halved' },
+            { id: 'r9', title: 'Perancang Strategi SEO jangkauan', team: 'distribusi', icon: 'fa-magnifying-glass-chart' }
+        ];
+
+        let selectedRoleId = null;
+        let placedRoles = { produksi: [], teknologi: [], distribusi: [] };
+
+        function initGame1() {
+            const pool = document.getElementById('roles-pool');
+            pool.innerHTML = '';
+            
+            rolesData.forEach(role => {
+                const btn = document.createElement('div');
+                btn.id = `role-card-${role.id}`;
+                btn.onclick = (e) => { e.stopPropagation(); selectRole(role.id); };
+                btn.className = 'role-card cursor-pointer px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 text-slate-200 text-xs font-semibold flex items-center space-x-2 transition-all transform hover:scale-105';
+                btn.innerHTML = `<i class="fa-solid ${role.icon} text-cyan-400"></i> <span>${role.title}</span>`;
+                pool.appendChild(btn);
+            });
+
+            placedRoles = { produksi: [], teknologi: [], distribusi: [] };
+            updateBucketUI();
+        }
+
+        function selectRole(id) {
+            playSound('click');
+            selectedRoleId = id;
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('border-cyan-400', 'bg-cyan-500/20', 'ring-2', 'ring-cyan-400'));
+            
+            const card = document.getElementById(`role-card-${id}`);
+            if (card) {
+                card.classList.add('border-cyan-400', 'bg-cyan-500/20', 'ring-2', 'ring-cyan-400');
+            }
+        }
+
+        function placeSelectedRole(targetTeam) {
+            if (!selectedRoleId) return;
+
+            const roleObj = rolesData.find(r => r.id === selectedRoleId);
+            if (!roleObj) return;
+
+            for (let team in placedRoles) {
+                placedRoles[team] = placedRoles[team].filter(id => id !== selectedRoleId);
+            }
+
+            placedRoles[targetTeam].push(selectedRoleId);
+            
+            const cardInPool = document.getElementById(`role-card-${selectedRoleId}`);
+            if (cardInPool) cardInPool.remove();
+
+            selectedRoleId = null;
+            playSound('click');
+            updateBucketUI();
+            checkGame1Completion();
+        }
+
+        function updateBucketUI() {
+            ['produksi', 'teknologi', 'distribusi'].forEach(team => {
+                const container = document.getElementById(`bucket-${team}`);
+                const countEl = document.getElementById(`count-${team}`);
+                container.innerHTML = '';
+                countEl.innerText = `${placedRoles[team].length}/3`;
+
+                placedRoles[team].forEach(roleId => {
+                    const role = rolesData.find(r => r.id === roleId);
+                    const item = document.createElement('div');
+                    item.className = 'px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 flex items-center justify-between';
+                    item.innerHTML = `<span><i class="fa-solid ${role.icon} mr-1.5 text-slate-400"></i>${role.title}</span>
+                        <button onclick="event.stopPropagation(); removeRoleFromBucket('${roleId}')" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-xmark"></i></button>`;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        function removeRoleFromBucket(roleId) {
+            playSound('click');
+            for (let team in placedRoles) {
+                placedRoles[team] = placedRoles[team].filter(id => id !== roleId);
+            }
+            
+            const role = rolesData.find(r => r.id === roleId);
+            const pool = document.getElementById('roles-pool');
+            const btn = document.createElement('div');
+            btn.id = `role-card-${role.id}`;
+            btn.onclick = (e) => { e.stopPropagation(); selectRole(role.id); };
+            btn.className = 'role-card cursor-pointer px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 hover:border-cyan-400 text-slate-200 text-xs font-semibold flex items-center space-x-2 transition-all transform hover:scale-105';
+            btn.innerHTML = `<i class="fa-solid ${role.icon} text-cyan-400"></i> <span>${role.title}</span>`;
+            pool.appendChild(btn);
+
+            updateBucketUI();
+        }
+
+        let game1Score = 0;
+
+        function checkGame1Completion() {
+            const totalPlaced = placedRoles.produksi.length + placedRoles.teknologi.length + placedRoles.distribusi.length;
+            if (totalPlaced === 9) {
+                let correctCount = 0;
+                rolesData.forEach(role => {
+                    if (placedRoles[role.team].includes(role.id)) {
+                        correctCount++;
+                    }
+                });
+
+                game1Score = Math.round((correctCount / 9) * 30);
+                document.getElementById('game1-score-text').innerText = game1Score;
+                updateTotalScore();
+
+                const feedbackEl = document.getElementById('game1-feedback');
+                feedbackEl.classList.remove('hidden');
+
+                if (correctCount === 9) {
+                    playSound('correct');
+                    feedbackEl.className = 'p-5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 space-y-2';
+                    feedbackEl.innerHTML = `
+                        <h4 class="font-bold text-base flex items-center"><i class="fa-solid fa-circle-check text-xl mr-2"></i> Sempurna! Semua Peran Berhasil Dicocokkan (+30 XP)</h4>
+                        <p class="text-xs text-slate-300">Kamu telah menguasai struktur kerja Tim Produksi, Tim Teknologi & Multimedia, serta Tim Distribusi dalam ekosistem media digital!</p>
+                    `;
+                } else {
+                    playSound('wrong');
+                    feedbackEl.className = 'p-5 rounded-2xl border border-amber-500/40 bg-amber-500/10 text-amber-300 space-y-2';
+                    feedbackEl.innerHTML = `
+                        <h4 class="font-bold text-base flex items-center"><i class="fa-solid fa-triangle-exclamation text-xl mr-2"></i> Kuis Selesai (${correctCount}/9 Benar - +${game1Score} XP)</h4>
+                        <p class="text-xs text-slate-300">Catatan Evaluasi: <strong>Tim Produksi</strong> membuat konten berita, <strong>Tim Teknologi</strong> membangun sistem/aplikasi, dan <strong>Tim Distribusi</strong> menyebarkan ke media sosial.</p>
+                    `;
+                }
+            }
+        }
+
+        function resetGame1() {
+            playSound('click');
+            document.getElementById('game1-feedback').classList.add('hidden');
+            initGame1();
+        }
+
+        /* ================= GAME 2: DETEKTIF INFORMASI FEED ================= */
+        const feedPostsData = [
+            {
+                author: '@BPS_Indonesia (Resmi)',
+                time: '1 jam yang lalu',
+                badge: 'Kasus #1',
+                content: 'Berdasarkan data Badan Pusat Statistik (BPS) tahun 2024, indeks literasi digital masyarakat Indonesia meningkat menjadi 3,65 dari skala 5,00 (Kategori Sedang).',
+                correct: 'Fakta',
+                explanation: '<strong>📌 FAKTA!</strong> Informasi didasarkan pada data statistik resmi instansi pemerintah (BPS), bersifat objektif, serta dapat dibuktikan kebenarannya.'
+            },
+            {
+                author: '@OpiniWarganet_ID',
+                time: '3 jam yang lalu',
+                badge: 'Kasus #2',
+                content: 'Menurut saya, membaca berita dari media sosial terasa jauh lebih menyenangkan dan relevan daripada membaca koran cetak formal.',
+                correct: 'Opini',
+                explanation: '<strong>💬 OPINI!</strong> Menggunakan frasa <em>"Menurut saya"</em> dan klaim subjektif <em>"lebih menyenangkan"</em> yang merupakan pandangan pribadi seseorang.'
+            },
+            {
+                author: '@KabarViral_Sensasi',
+                time: '5 menit yang lalu',
+                badge: 'Kasus #3',
+                content: '[SEBARKAN SEKARANG!] Bahaya radiasi HP di atas jam 12 malam dapat memicu otak membeku instan! Jangan sampai terlambat, kirim ke 10 grup WhatsApp!',
+                correct: 'Hoaks',
+                explanation: '<strong>🚨 HOAKS!</strong> Menggunakan judul provokatif bombastis, memicu ketakutan publik tanpa bukti medis, serta memaksa penyebaran pesan.'
+            },
+            {
+                author: '@Kemenkomdigi_RI',
+                time: 'Yesterday',
+                badge: 'Kasus #4',
+                content: 'Undang-Undang Informasi dan Transaksi Elektronik (UU ITE) mengatur etika, keamanan transaksi, dan perlindungan data pribadi pengguna internet di Indonesia.',
+                correct: 'Fakta',
+                explanation: '<strong>📌 FAKTA!</strong> Merupakan perundang-undangan hukum resmi negara Republik Indonesia yang tertulis legal dan terverifikasi.'
+            },
+            {
+                author: '@GuruDigital_Hits',
+                time: '2 hari yang lalu',
+                badge: 'Kasus #5',
+                content: 'Sebaiknya semua sekolah melarang siswa membawa HP agar prestasi belajar otomatis meningkat 100% tanpa gangguan.',
+                correct: 'Opini',
+                explanation: '<strong>💬 OPINI!</strong> Merupakan saran pribadi yang diawali kata <em>"Sebaiknya"</em> dan anggapan estimasi subjektif yang belum tentu berlaku mutlak.'
+            }
+        ];
+
+        let currentFeedIndex = 0;
+        let feedScoreCounter = 0;
+        let game2Score = 0;
+
+        function renderFeedPost() {
+            const data = feedPostsData[currentFeedIndex];
+            document.getElementById('feed-author').innerText = data.author;
+            document.getElementById('feed-time').innerText = `${data.time} • Simulasi Feed`;
+            document.getElementById('feed-badge').innerText = data.badge;
+            document.getElementById('feed-content-box').innerText = data.content;
+            document.getElementById('feed-progress-text').innerText = `${currentFeedIndex + 1}`;
+
+            document.getElementById('feed-explanation-box').classList.add('hidden');
+            document.getElementById('next-feed-btn').classList.add('hidden');
+            document.querySelectorAll('.feed-opt-btn').forEach(b => {
+                b.disabled = false;
+                b.classList.remove('opacity-50');
+            });
+        }
+
+        function checkFeedAnswer(userChoice) {
+            const data = feedPostsData[currentFeedIndex];
+            const expBox = document.getElementById('feed-explanation-box');
+            const nextBtn = document.getElementById('next-feed-btn');
+
+            document.querySelectorAll('.feed-opt-btn').forEach(b => b.disabled = true);
+            expBox.classList.remove('hidden');
+
+            if (userChoice === data.correct) {
+                playSound('correct');
+                feedScoreCounter++;
+                expBox.className = 'p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 space-y-1';
+                expBox.innerHTML = `
+                    <p class="font-bold text-sm flex items-center"><i class="fa-solid fa-circle-check mr-2"></i> Analisis Detektif Tepat! (+6 XP)</p>
+                    <p class="text-xs text-slate-300 leading-relaxed">${data.explanation}</p>
+                `;
+            } else {
+                playSound('wrong');
+                expBox.className = 'p-4 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-300 space-y-1';
+                expBox.innerHTML = `
+                    <p class="font-bold text-sm flex items-center"><i class="fa-solid fa-circle-xmark mr-2"></i> Kurang Tepat (Kategori Benar: ${data.correct})</p>
+                    <p class="text-xs text-slate-300 leading-relaxed">${data.explanation}</p>
+                `;
+            }
+
+            game2Score = Math.round((feedScoreCounter / 5) * 30);
+            document.getElementById('game2-score-text').innerText = game2Score;
+            updateTotalScore();
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextFeedPost() {
+            playSound('click');
+            if (currentFeedIndex < feedPostsData.length - 1) {
+                currentFeedIndex++;
+                renderFeedPost();
+            } else {
+                playSound('complete');
+                alert("Selamat! Kamu telah merampungkan analisis 5 kasus Detektif Informasi!");
+                switchTab('evaluasi');
+            }
+        }
+
+        /* ================= EVALUASI KUIS AKHIR ================= */
+        const quizQuestions = [
+            {
+                q: "1. Apa pengertian utama dari Ekosistem Media Digital?",
+                opts: [
+                    "Kombinasi peran individu, teknologi multimedia, audiens, dan lembaga pendukung yang menyajikan informasi akurat era digital",
+                    "Aplikasi media sosial khusus untuk mengunggah foto liburan pribadi",
+                    "Perangkat komputer server yang beroperasi tanpa memerlukan campur tangan manusia",
+                    "Kumpulan artikel berita cetak koran lama yang diarsipkan dalam lemari"
+                ],
+                ans: 0,
+                exp: "Ekosistem media digital menghubungkan peran manusia (reporter, editor), teknologi multimedia, dan audiens secara terintegrasi."
+            },
+            {
+                q: "2. Profesi manakah yang bertindak dalam Tim Teknologi & Multimedia dalam media digital?",
+                opts: [
+                    "Reporter wawancara",
+                    "Web Developer & Pengembang Sistem",
+                    "Editor Bahasa Naskah",
+                    "Pengelola Media Sosial"
+                ],
+                ans: 1,
+                exp: "Web Developer bertugas membangun arsitektur sistem dan situs berita agar aman & dapat diakses."
+            },
+            {
+                q: "3. Ciri-ciri utama informasi yang tergolong FAKTA adalah...",
+                opts: [
+                    "Menggunakan klaim provokatif dan paksaan pesan berantai",
+                    "Berdasarkan pendapat atau perasaan pribadi seseorang",
+                    "Berdasarkan data bukti valid, objektif, dan dapat dibuktikan kebenarannya",
+                    "Berisi harapan masa depan tanpa narasumber jelas"
+                ],
+                ans: 2,
+                exp: "Fakta ditandai dengan bukti konkret, data statistik aktual, serta bersikap objektif."
+            },
+            {
+                q: "4. Sebuah pesan berantai berbunyi: 'Awas! Meminum air es saat cuaca panas menyebabkan pembuluh darah meledak! Bagikan segera!'. Berita ini memuat indikator...",
+                opts: [
+                    "Berita Fakta Resmi",
+                    "Hoaks / Disinformasi Manipulatif",
+                    "Opini Ilmiah Lembaga Kesehatan",
+                    "Laporan Statistik BPS"
+                ],
+                ans: 1,
+                exp: "Informasi medis palsu tanpa dasar bukti dan memaksa penyebaran pesan adalah ciri khas Hoaks."
+            },
+            {
+                q: "5. Manakah yang merupakan contoh kalimat OPINI?",
+                opts: [
+                    "Berdasarkan UU ITE, penyebaran hoaks diancam pidana hukum",
+                    "Tahun ajaran baru sekolah dimulai pada bulan Juli",
+                    "Menurut saya, tampilan aplikasi berita ini sangat menarik dan estetik",
+                    "Suhu udara kota hari ini tercatat 32 derajat Celsius"
+                ],
+                ans: 2,
+                exp: "Kalimat 'Menurut saya...' dan penilaian estetik adalah sudut pandang subjektif (Opini)."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizCorrectCounter = 0;
+        let quizScore = 0;
+
+        function renderQuizQuestion() {
+            const data = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIndex + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quiz-question-box').innerText = data.q;
+
+            const optsContainer = document.getElementById('quiz-options-container');
+            optsContainer.innerHTML = '';
+
+            data.opts.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.onclick = () => selectQuizAnswer(idx);
+                btn.className = 'quiz-opt-btn w-full p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-400 text-left text-xs sm:text-sm text-slate-200 transition-all font-medium flex items-center justify-between';
+                btn.innerHTML = `<span>${optText}</span> <i class="fa-regular fa-circle text-slate-600"></i>`;
+                optsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback-box').classList.add('hidden');
+            document.getElementById('next-quiz-btn').classList.add('hidden');
+        }
+
+        function selectQuizAnswer(selectedIdx) {
+            const data = quizQuestions[currentQuizIndex];
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            const nextBtn = document.getElementById('next-quiz-btn');
+
+            document.querySelectorAll('.quiz-opt-btn').forEach(b => b.disabled = true);
+            feedbackBox.classList.remove('hidden');
+
+            if (selectedIdx === data.ans) {
+                playSound('correct');
+                quizCorrectCounter++;
+                feedbackBox.className = 'p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 space-y-1';
+                feedbackBox.innerHTML = `
+                    <p class="font-bold text-sm flex items-center"><i class="fa-solid fa-check-circle mr-2"></i> Jawaban Benar! (+8 XP)</p>
+                    <p class="text-xs text-slate-300">${data.exp}</p>
+                `;
+            } else {
+                playSound('wrong');
+                feedbackBox.className = 'p-4 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-300 space-y-1';
+                feedbackBox.innerHTML = `
+                    <p class="font-bold text-sm flex items-center"><i class="fa-solid fa-circle-xmark mr-2"></i> Kurang Tepat</p>
+                    <p class="text-xs text-slate-300">${data.exp}</p>
+                `;
+            }
+
+            quizScore = Math.round((quizCorrectCounter / 5) * 40);
+            document.getElementById('quiz-score-text').innerText = quizScore;
+            updateTotalScore();
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            playSound('click');
+            if (currentQuizIndex < quizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                playSound('complete');
+                document.getElementById('quiz-container').innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl mx-auto shadow-neon-amber">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Evaluasi Kuis Selesai!</h3>
+                        <p class="text-sm text-slate-300">Skor Evaluasi Kuis Kamu: <strong class="text-amber-400 font-mono text-base">${quizScore} / 40 XP</strong></p>
+                        <p class="text-xs text-slate-400">Silakan isi nama lengkapmu di bawah ini untuk menerbitkan Sertifikat Kelulusan!</p>
+                    </div>
+                `;
+            }
+        }
+
+        /* ================= SCORE CALCULATOR ================= */
+        function updateTotalScore() {
+            const total = game1Score + game2Score + quizScore;
+            document.getElementById('header-score-display').innerText = total;
+            document.getElementById('summary-g1').innerText = game1Score;
+            document.getElementById('summary-g2').innerText = game2Score;
+            document.getElementById('summary-quiz').innerText = quizScore;
+            document.getElementById('summary-total').innerText = total;
+            document.getElementById('cert-score').innerText = `${total} / 100 XP`;
+
+            const predicateEl = document.getElementById('cert-predicate');
+            if (total >= 85) {
+                predicateEl.innerText = "Detektif Digital Master";
+                predicateEl.className = "text-base font-bold text-cyan-400 cert-print-text-dark";
+            } else if (total >= 70) {
+                predicateEl.innerText = "Analis Informasi Handal";
+                predicateEl.className = "text-base font-bold text-purple-400 cert-print-text-dark";
+            } else {
+                predicateEl.innerText = "Penyelidik Pemula";
+                predicateEl.className = "text-base font-bold text-amber-400 cert-print-text-dark";
+            }
+        }
+
+        /* ================= CERTIFICATE GENERATOR ================= */
+        function generateCertificate() {
+            playSound('click');
+            const nameInput = document.getElementById('user-name-input').value.trim();
+            if (!nameInput) {
+                alert("Mohon ketikkan nama lengkap siswa terlebih dahulu!");
+                return;
+            }
+
+            document.getElementById('cert-name-display').innerText = nameInput;
+
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('cert-date').innerText = now.toLocaleDateString('id-ID', options);
+
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('cert-id').innerText = `ID: EMD-2026-${randomId}`;
+
+            try {
+                confetti({
+                    particleCount: 140,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+                playSound('complete');
+            } catch(e) {}
+
+            document.getElementById('printable-certificate-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ================= ON LOAD INITIALIZATION ================= */
+        window.onload = function() {
+            initGame1();
+            renderFeedPost();
+            renderQuizQuestion();
+            updateTotalScore();
+        };
+    </script>
+</body>
+</html>
